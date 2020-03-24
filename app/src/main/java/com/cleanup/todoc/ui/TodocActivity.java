@@ -1,5 +1,6 @@
 package com.cleanup.todoc.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.injection.ViewModelFactory;
 import com.cleanup.todoc.models.Project;
 import com.cleanup.todoc.models.Task;
 
@@ -31,7 +34,7 @@ import java.util.Date;
  *
  * @author Gaëtan HERFRAY
  */
-public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+public class TodocActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
     /**
      * List of all projects available in the application
      */
@@ -42,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     @NonNull
     private final ArrayList<Task> tasks = new ArrayList<>();
+
+    /**
+     * handle ViewModel
+     */
+    private TaskViewModel taskViewModel;
 
     /**
      * The adapter which handles the list of tasks
@@ -94,11 +102,14 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
-        listTasks = findViewById(R.id.list_tasks);
+
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
-        listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        listTasks.setAdapter(adapter);
+
+        configureRecyclerView();
+        configureViewModel();
+
+        getTasks();
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +118,42 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
         });
     }
+
+
+    private void configureRecyclerView(){
+
+        listTasks = findViewById(R.id.list_tasks);
+
+        listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        listTasks.setAdapter(adapter);
+    }
+
+    private void configureViewModel(){
+        ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory(this);
+        this.taskViewModel = ViewModelProviders.of(this, mViewModelFactory).get(TaskViewModel.class);
+    }
+
+    private void getProjects(){
+        this.taskViewModel.getProjects();
+    }
+
+    private void getTasks(){
+        this.taskViewModel.getTasks();
+    }
+
+    private void createTask(Task task){
+        this.createTask(task);
+    }
+
+    private void deleteTask(Task task){
+        this.taskViewModel.deleteTask(task.getId());
+    }
+
+    private void updateTask(Task task){
+        this.taskViewModel.updateTask(task);
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -320,4 +367,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
          */
         NONE
     }
+
+
 }

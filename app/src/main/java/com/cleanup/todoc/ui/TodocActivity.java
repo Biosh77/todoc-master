@@ -27,6 +27,7 @@ import com.cleanup.todoc.models.Task;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -38,18 +39,19 @@ public class TodocActivity extends AppCompatActivity implements TasksAdapter.Del
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    private List<Project> allProjects;
 
     /**
      * List of all current tasks of the application
      */
     @NonNull
-    private final ArrayList<Task> tasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
     /**
      * handle ViewModel
      */
     private TaskViewModel taskViewModel;
+
 
     /**
      * The adapter which handles the list of tasks
@@ -110,6 +112,7 @@ public class TodocActivity extends AppCompatActivity implements TasksAdapter.Del
         configureViewModel();
 
         getTasks();
+        getProjects();
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,27 +134,26 @@ public class TodocActivity extends AppCompatActivity implements TasksAdapter.Del
     private void configureViewModel(){
         ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory(this);
         this.taskViewModel = ViewModelProviders.of(this, mViewModelFactory).get(TaskViewModel.class);
+
     }
 
     private void getProjects(){
-        this.taskViewModel.getProjects();
+        this.taskViewModel.getProjects().observe(this,this::refreshProject);
+    }
+
+    private void refreshProject(List<Project> projects ){
+        allProjects = projects;
     }
 
     private void getTasks(){
-        this.taskViewModel.getTasks();
+        this.taskViewModel.getTasks().observe(this,this::refreshTask);
     }
 
-    private void createTask(Task task){
-        this.createTask(task);
+    private void refreshTask( List<Task> tasks2){
+        tasks = tasks2;
+        updateTasks();
     }
 
-    private void deleteTask(Task task){
-        this.taskViewModel.deleteTask(task.getId());
-    }
-
-    private void updateTask(Task task){
-        this.taskViewModel.updateTask(task);
-    }
 
 
 
@@ -183,6 +185,7 @@ public class TodocActivity extends AppCompatActivity implements TasksAdapter.Del
     @Override
     public void onDeleteTask(Task task) {
         tasks.remove(task);
+        taskViewModel.deleteTask(task.getId());
         updateTasks();
     }
 
@@ -229,7 +232,7 @@ public class TodocActivity extends AppCompatActivity implements TasksAdapter.Del
                 dialogInterface.dismiss();
             }
         }
-        // If dialog is aloready closed
+        // If dialog is already closed
         else {
             dialogInterface.dismiss();
         }
@@ -256,6 +259,7 @@ public class TodocActivity extends AppCompatActivity implements TasksAdapter.Del
      */
     private void addTask(@NonNull Task task) {
         tasks.add(task);
+        taskViewModel.createTask(task);
         updateTasks();
     }
 

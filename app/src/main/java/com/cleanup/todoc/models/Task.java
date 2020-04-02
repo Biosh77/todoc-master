@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+
 import java.util.Comparator;
 
 /**
@@ -95,6 +96,7 @@ public class Task {
         return Project.getProjectById(projectId);
     }
 
+
     /**
      * Returns the name of the task.
      *
@@ -114,6 +116,11 @@ public class Task {
         this.name = name;
     }
 
+
+    public long getProjectId(){
+        return projectId;
+    }
+
     /**
      * Sets the timestamp when the task has been created.
      *
@@ -121,6 +128,10 @@ public class Task {
      */
     private void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
+    }
+
+    public long getCreationTimestamp(){
+        return creationTimestamp;
     }
 
     /**

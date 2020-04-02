@@ -53,12 +53,12 @@ public abstract class TodocDatabase extends RoomDatabase {
 
 
                 Project[] projects = Project.getAllProjects();
-                // à vérifier plus en détails
-                for(int id = 0; id<=3; id++) {
+
+                for(int i = 0; i<=2; i++) {
                     ContentValues contentValues = new ContentValues();
-                    contentValues.put("id", projects[0].getId());
-                    contentValues.put("name", projects[0].getName());
-                    contentValues.put("color", projects[0].getColor());
+                    contentValues.put("id", projects[i].getId());
+                    contentValues.put("name", projects[i].getName());
+                    contentValues.put("color", projects[i].getColor());
 
 
                     db.insert("Project", OnConflictStrategy.IGNORE, contentValues);

@@ -32,9 +32,10 @@ public class TaskViewModel extends ViewModel {
 
     // FOR PROJECT
 
-    public LiveData<Project> getProjects() {
+    public LiveData<List<Project>> getProjects() {
         return projectDataSource.getProjects();
     }
+
 
     // FOR TASK
 

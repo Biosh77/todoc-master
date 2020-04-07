@@ -1,4 +1,4 @@
-package com.cleanup.todoc.models;
+package com.cleanup.todoc_J.models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

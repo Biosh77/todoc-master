@@ -1,4 +1,4 @@
-package com.cleanup.todoc.ui;
+package com.cleanup.todoc_J.ui;
 
 
 import android.support.annotation.NonNull;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.cleanup.todoc.R;
-import com.cleanup.todoc.models.Task;
+import com.cleanup.todoc_J.R;
+import com.cleanup.todoc_J.models.Task;
 
 import java.util.List;
 

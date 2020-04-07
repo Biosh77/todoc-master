@@ -1,12 +1,12 @@
-package com.cleanup.todoc;
+package com.cleanup.todoc_J;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 
-import com.cleanup.todoc.database.TodocDatabase;
-import com.cleanup.todoc.models.Project;
-import com.cleanup.todoc.models.Task;
+import com.cleanup.todoc_J.database.TodocDatabase;
+import com.cleanup.todoc_J.models.Project;
+import com.cleanup.todoc_J.models.Task;
 
 import org.junit.After;
 import org.junit.Before;

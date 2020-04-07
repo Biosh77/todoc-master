@@ -1,22 +1,22 @@
-package com.cleanup.todoc.injection;
+package com.cleanup.todoc_J.injection;
 
 import android.content.Context;
 
-import com.cleanup.todoc.database.TodocDatabase;
-import com.cleanup.todoc.repositories.ProjectDataRepository;
-import com.cleanup.todoc.repositories.TaskDataRepository;
+import com.cleanup.todoc_J.database.TodocDatabase;
+import com.cleanup.todoc_J.repositories.ProjectDataRepository;
+import com.cleanup.todoc_J.repositories.TaskDataRepository;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class Injection {
 
-    public static TaskDataRepository provideItemDataSource(Context context) {
+    public static TaskDataRepository provideTaskDataSource(Context context) {
         TodocDatabase database = TodocDatabase.getInstance(context);
         return new TaskDataRepository(database.taskDao());
     }
 
-    public static ProjectDataRepository provideUserDataSource(Context context) {
+    public static ProjectDataRepository provideProjectDataSource(Context context) {
         TodocDatabase database = TodocDatabase.getInstance(context);
         return new ProjectDataRepository(database.projectDao());
     }
@@ -24,8 +24,8 @@ public class Injection {
     public static Executor provideExecutor(){ return Executors.newSingleThreadExecutor(); }
 
     public static ViewModelFactory provideViewModelFactory(Context context) {
-        TaskDataRepository dataSourceTask = provideItemDataSource(context);
-        ProjectDataRepository dataSourceProject = provideUserDataSource(context);
+        TaskDataRepository dataSourceTask = provideTaskDataSource(context);
+        ProjectDataRepository dataSourceProject = provideProjectDataSource(context);
         Executor executor = provideExecutor();
         return new ViewModelFactory(dataSourceTask, dataSourceProject, executor);
     }

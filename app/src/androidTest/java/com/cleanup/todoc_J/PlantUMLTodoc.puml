@@ -1,0 +1,39 @@
+@startuml
+left to right direction
+Utilisateur --> (Ajouter tâches)
+Utilisateur --> (Trier tâches)
+(Trier tâches) .. (A->Z)
+(Trier tâches) .. (Z->A)
+(Trier tâches) .. (Les plus anciens d'abord)
+(Trier tâches) .. (Les plus récents d'abord)
+Utilisateur --> (Consulter tâches)
+Utilisateur --> (Supprimer tâches)
+@enduml
+
+
+
+
+@startuml
+TodocDataBase --|> TaskDao
+TodocDataBase --|> ProjectDao
+ProjectDao --|> ProjectDataRepository
+TaskDao --|> TaskDataRepository
+TaskDataRepository --|> TaskViewModel
+ProjectDataRepository --|> TaskViewModel
+TaskViewModel --|> TodocActivity
+TodocActivity <|-- TasksAdapter
+TasksAdapter <|-- TaskViewHolder
+Task --|> TodocActivity
+Project --|> TodocActivity
+
+
+Task : blabla
+Project : blabla
+TaskDao : blabla
+ProjectDao : blabla
+
+
+interface TaskDao
+interface ProjectDao
+
+@enduml

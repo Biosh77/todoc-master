@@ -1,4 +1,4 @@
-package com.cleanup.todoc.ui;
+package com.cleanup.todoc_J.ui;
 
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
@@ -7,9 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cleanup.todoc.R;
-import com.cleanup.todoc.models.Project;
-import com.cleanup.todoc.models.Task;
+import com.cleanup.todoc_J.R;
+import com.cleanup.todoc_J.models.Project;
+import com.cleanup.todoc_J.models.Task;
 
 
 class TaskViewHolder extends RecyclerView.ViewHolder {

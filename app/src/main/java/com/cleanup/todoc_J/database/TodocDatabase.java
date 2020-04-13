@@ -19,8 +19,8 @@ import com.cleanup.todoc_J.models.Task;
 public abstract class TodocDatabase extends RoomDatabase {
 
 
-    // --- SINGLETON ---
-    private static volatile TodocDatabase INSTANCE;
+    // --- SINGLETON --- // une seule instance pour toute l'app
+    private static volatile TodocDatabase INSTANCE;  // pour utiliser la même variable sans copie, 1 pour tout les threads
 
     // --- DAO ---
     public abstract ProjectDao projectDao();
@@ -30,7 +30,7 @@ public abstract class TodocDatabase extends RoomDatabase {
     // --- INSTANCE ---
     public static TodocDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            synchronized (TodocDatabase.class) {
+            synchronized (TodocDatabase.class) { // protège, pour pas que 2 threads aient accès à la même ressource
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             TodocDatabase.class, "MyDatabase.db")

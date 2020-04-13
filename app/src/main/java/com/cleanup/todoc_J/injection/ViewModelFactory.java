@@ -10,7 +10,7 @@ import com.cleanup.todoc_J.ui.TaskViewModel;
 
 import java.util.concurrent.Executor;
 
-public class ViewModelFactory implements ViewModelProvider.Factory {
+public class ViewModelFactory implements ViewModelProvider.Factory { // Factory sert à instancier le viewModel
 
     private final TaskDataRepository taskDataSource;
     private final ProjectDataRepository projectDataSource;

@@ -27,6 +27,7 @@ Class Task {
  + Long getId()
  - Void setId(long id)
  + Project getProject()
++  Task(long id, long projectId, String name, long creationTimestamp)
  + Long getProjectId()
  - Void setProjectId(long projectId)
  + String getName()
@@ -42,6 +43,7 @@ Class Project {
 - Int color
 
 + Project[] getAllProjects()
++ Project(long id, String name, int color)
 + Project getProjectById(long id)
 + Long getId()
 + String getName()

@@ -1,39 +1,211 @@
-@startuml
-left to right direction
-Utilisateur --> (Ajouter tâches)
-Utilisateur --> (Trier tâches)
-(Trier tâches) .. (A->Z)
-(Trier tâches) .. (Z->A)
-(Trier tâches) .. (Les plus anciens d'abord)
-(Trier tâches) .. (Les plus récents d'abord)
-Utilisateur --> (Consulter tâches)
-Utilisateur --> (Supprimer tâches)
-@enduml
-
-
-
 
 @startuml
-TodocDataBase --|> TaskDao
-TodocDataBase --|> ProjectDao
-ProjectDao --|> ProjectDataRepository
-TaskDao --|> TaskDataRepository
-TaskDataRepository --|> TaskViewModel
-ProjectDataRepository --|> TaskViewModel
-TaskViewModel --|> TodocActivity
-TodocActivity <|-- TasksAdapter
-TasksAdapter <|-- TaskViewHolder
-Task --|> TodocActivity
-Project --|> TodocActivity
+TodocDataBase --o TodocDataBase
+
+ProjectDao *-- ProjectDataRepository
+TaskDao *-- TaskDataRepository
+TaskDataRepository *-- ViewModelFactory
+ProjectDataRepository *-- ViewModelFactory
+TaskViewModel *-- TodocActivity
+TaskViewModel --* TaskDataRepository
+TaskViewModel --* ProjectDataRepository
+
+Class Injection
 
 
-Task : blabla
-Project : blabla
-TaskDao : blabla
-ProjectDao : blabla
+Task *-- TodocActivity
+Project *-- TodocActivity
 
 
-interface TaskDao
-interface ProjectDao
 
+Class Task {
+ - Long id
+ - Long project id
+ - String name
+ - Long creation timestamp
+
+ + Long getId()
+ - Void setId(long id)
+ + Project getProject()
+ + Long getProjectId()
+ - Void setProjectId(long projectId)
+ + String getName()
+ + Void setName(String name)
+ - Void setCreationTimestamp(long creationTimestamp)
+ + Long getCreationTimestamp()
+}
+
+
+Class Project {
+- Long id
+- String name
+- Int color
+
++ Project[] getAllProjects()
++ Project getProjectById(long id)
++ Long getId()
++ String getName()
++ Int getColor()
+}
+
+Class TodocActivity {
+
+- List<Project> allProjects
+- List<Task> tasks = new ArrayList<>
+- TaskViewModel taskViewModel
+- TasksAdapter adapter = new TasksAdapter
+- SortMethod sortMethod
++ AlertDialog dialog
+- EditText dialogEditText
+- Spinner dialogSpinner
+- RecyclerView listTasks
+- TextView lblNoTasks
+
++ Void onCreate(Bundle savedInstanceState)
+- Void configureRecyclerView()
+- Void configureViewModel()
+- Void getProjects()
+- Void refreshProject(List<Project> projects)
+- Void getTasks()
+- Void refreshTask(List<Task> tasks2)
++ Boolean onCreateOptionsMenu(Menu menu))
++ Boolean onOptionsItemSelected(MenuItem item)
++ Void onDeleteTask(Task task)
+- Void onPositiveButtonClick(DialogInterface dialogInterface)
+- Void showAddTaskDialog()
+- Void addTask(Task task)
+- Void updateTasks()
+- AlertDialog getAddTaskDialog()
+- Void populateDialogSpinner()
+}
+
+enum SortMethod {
+  ALPHABETICAL
+  ALPHABETICAL_INVERTED
+  RECENT_FIRST
+  OLD_FIRST
+  NONE
+}
+
+abstract class TodocDataBase {
+- TodocDatabase INSTANCE
++ projectDao()
++ taskDao()
++ getInstance()
+- prepopulateDatabase()
+}
+
+interface TaskDao {
+~ LiveData<List<Task>> getTasks()
+~ Long insertTask(Task task)
+~ Int updateTask(Task task)
+~ Int deleteTask(long TaskId)
+}
+interface ProjectDao {
+~ LiveData<List<Project>> getProjects()
+~ void insertProject(Project project)
+}
+
+Class Injection {
++ provideTaskDataSource(Context context)
++ provideProjectDataSource(Context context)
++ provideExecutor()
++ provideViewModelFactory(Context context)
+}
+
+class ViewModelFactory {
+- TaskDataRepository taskDataSource
++ ViewModelFactory(TaskDataRepository taskDataSource, ProjectDataRepository projectDataSource, Executor executor)
+- ProjectDataRepository projectDataSource
++  T create(Class<T> modelClass)
+- Executor executor
+}
+
+Class ProjectDataRepository {
+- ProjectDao projectDao
++ ProjectDataRepository(ProjectDao projectDao)
++ LiveData<List<Project>> getProjects()
+}
+
+Class TaskDataRepository {
+- TaskDao taskDao
+
++ TaskDataRepository(TaskDao taskDao)
++ LiveData<List<Task>> getTasks()
++ Void createTask(Task task)
++ Void deleteTask(long TaskId)
++ Void updateTask(Task task)
+}
+
+Class TaskViewModel {
+-  TaskDataRepository taskDataSource
+- ProjectDataRepository projectDataSource
+- Executor executor
+
++ LiveData<List<Project>> getProjects()
++ LiveData<List<Task>> getTasks()
++ Void createTask(Task task)
++ Void deleteTask(long TaskId)
++ Void updateTask(Task task)
+
+}
+
+class TasksAdapter  {
+- List<Task> tasks
+- DeleteTaskListener deleteTaskListener
+
++ TasksAdapter(List<Task> tasks, DeleteTaskListener deleteTaskListener)
++ void updateTasks( List<Task> tasks)
++ onCreateViewHolder(ViewGroup viewGroup, int viewType)
++ onBindViewHolder(TaskViewHolder taskViewHolder, int position)
++ getItemCount()
++ onDeleteTask(Task task)
+}
+
+interface DeleteTaskListener {
+~ onDeleteTask(Task task)
+}
+
+Class TaskViewHolder {
+- AppCompatImageView imgProject
+- TextView lblTaskName
+- TextView lblProjectName
+- AppCompatImageView imgDelete
+- TasksAdapter.DeleteTaskListener deleteTaskListener
+
+~ TaskViewHolder( itemView, TasksAdapter.DeleteTaskListener deleteTaskListener)
+
+}
+
+TaskAZComparator --+ Task
+
+Class  TaskAZComparator {
++ compare(Task left, Task right)
+}
+
+TaskZAComparator --+ Task
+
+Class TaskZAComparator {
++ compare(Task left, Task right)
+}
+
+TaskRecentComparator --+ Task
+
+ Class TaskRecentComparator {
+ + compare(Task left, Task right)
+ }
+
+ TaskOldComparator--+ Task
+
+  Class TaskOldComparator {
+  + compare(Task left, Task right)
+  }
+
+
+TodocActivity +-- SortMethod
+SortMethod *-- TodocActivity
+TodocActivity ..|> DeleteTaskListener
+DeleteTaskListener *-- TasksAdapter
+DeleteTaskListener --+ TasksAdapter
+DeleteTaskListener *-- TaskViewHolder
 @enduml

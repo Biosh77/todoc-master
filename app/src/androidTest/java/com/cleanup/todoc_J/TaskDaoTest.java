@@ -1,7 +1,10 @@
 package com.cleanup.todoc_J;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.persistence.room.Room;
+import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
 import com.cleanup.todoc_J.database.TodocDatabase;
@@ -14,6 +17,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -90,5 +95,27 @@ public class TaskDaoTest {
     }
 
 
+    public static class LiveDataTestUtil {
 
+        /**
+         * Get the value from a LiveData object. We're waiting for LiveData to emit, for 2 seconds.
+         * Once we got a notification via onChanged, we stop observing.
+         */
+        public static <T> T getValue(final LiveData<T> liveData) throws InterruptedException {
+            final Object[] data = new Object[1];
+            final CountDownLatch latch = new CountDownLatch(1);
+            Observer<T> observer = new Observer<T>() {
+                @Override
+                public void onChanged(@Nullable T o) {
+                    data[0] = o;
+                    latch.countDown();
+                    liveData.removeObserver(this);
+                }
+            };
+            liveData.observeForever(observer);
+            latch.await(2, TimeUnit.SECONDS);
+            //noinspection unchecked
+            return (T) data[0];
+        }
+    }
 }

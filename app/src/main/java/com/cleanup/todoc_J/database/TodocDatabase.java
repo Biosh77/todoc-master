@@ -52,6 +52,7 @@ public abstract class TodocDatabase extends RoomDatabase {
                 super.onCreate(db);
 
 
+
                 Project[] projects = Project.getAllProjects();
 
                 for(int i = 0; i<=2; i++) {
